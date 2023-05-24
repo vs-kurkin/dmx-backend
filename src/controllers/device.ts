@@ -1,14 +1,17 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import DeviceService from '../services/device.js';
 import DMXService from '../services/dmx.js';
-import { DeviceInterface, DeviceName } from "@/types/Device";
-import { ChannelValue } from '@/types/Channel.js';
-
-export type UpdateParams = {
-  channel: number;
-  name: DeviceName;
-  value: ChannelValue;
-};
+import { DeviceInterface, DeviceName } from '@/types/Device';
+import { ChannelValue } from '@/types/Channel';
+import { ApiTags, ApiNotFoundResponse } from '@nestjs/swagger';
 
 export type HTTPResponse<T> = {
   statusCode?: number;
@@ -18,6 +21,7 @@ export type HTTPResponse<T> = {
 };
 
 @Controller('device')
+@ApiTags('Device')
 export default class DeviceController {
   constructor(
     private readonly dmx: DMXService,
@@ -32,7 +36,12 @@ export default class DeviceController {
     return this.device.getDevices();
   }
 
-  @Get(':name')
+  @Get('/:name')
+  @HttpCode(404)
+  @ApiNotFoundResponse({
+    description: 'Device not found',
+    status: '4XX',
+  })
   private getDevice(
     @Param('name') name: DeviceName,
   ): HTTPResponse<DeviceInterface> {
@@ -49,7 +58,11 @@ export default class DeviceController {
   }
 
   @Put(':id/:channel/:value')
-  update(@Param() { name, channel, value }: UpdateParams) {
+  update(
+    @Param('name') name: DeviceName,
+    @Param('channel') channel: number,
+    @Param('value') value: ChannelValue,
+  ) {
     const address = this.device.getAddress(name, channel);
 
     this.dmx.setValue(address, value);

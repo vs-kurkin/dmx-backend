@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChannelValue } from '@/types/Channel.js';
+import { ChannelValue } from '@/types/Channel';
 import DMX from '@vk/dmx';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { ChannelInterface } from '@/types/Channel.js';
+import { ChannelInterface } from '@/types/Channel';
 
 export interface DeviceInterface {
   name: string;

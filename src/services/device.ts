@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeviceInterface, DeviceName } from '@/types/Device.js';
+import { DeviceInterface, DeviceName } from '@/types/Device';
 
 @Injectable()
 export default class DeviceService {
