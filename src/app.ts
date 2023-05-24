@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { DeviceController, DMXController } from '@/controllers/index';
-import { DMXService, DeviceService } from '@/services/index';
+import DMXController from './controllers/dmx.js';
+import DeviceController from './controllers/device.js';
+import DMXService from './services/dmx.js';
+import DeviceService from './services/device.js';
 
 const IS_PROD = process.env.NODE_ENV !== 'development';
 
@@ -16,4 +18,4 @@ const IS_PROD = process.env.NODE_ENV !== 'development';
   controllers: [DMXController, DeviceController],
   providers: [DMXService, DeviceService],
 })
-export class App {}
+export default class App {}

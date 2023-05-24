@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { DeviceService } from '@/services/device';
-import { DMXService } from '@/services/dmx';
-import { DeviceInterface, DeviceName } from '@/types/Device';
-import { ChannelValue } from '@/types/Channel';
+import DeviceService from '../services/device.js';
+import DMXService from '../services/dmx.js';
+import { DeviceInterface, DeviceName } from "@/types/Device";
+import { ChannelValue } from '@/types/Channel.js';
 
 export type UpdateParams = {
   channel: number;
@@ -18,7 +18,7 @@ export type HTTPResponse<T> = {
 };
 
 @Controller('device')
-export class DeviceController {
+export default class DeviceController {
   constructor(
     private readonly dmx: DMXService,
     private readonly device: DeviceService,
@@ -28,7 +28,7 @@ export class DeviceController {
   }
 
   @Get()
-  async list() {
+  async getDevices() {
     return this.device.getDevices();
   }
 

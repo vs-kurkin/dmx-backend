@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { DMXService } from '@/services/dmx';
-import { ChannelValue } from '@/types/Channel';
+import DMXService from '../services/dmx.js';
+import { ChannelValue } from '@/types/Channel.js';
 
 export type SetParams = {
   address: number;
@@ -8,7 +8,7 @@ export type SetParams = {
 };
 
 @Controller('dmx')
-export class DMXController {
+export default class DMXController {
   constructor(private readonly dmx: DMXService) {
     this.dmx = dmx;
   }

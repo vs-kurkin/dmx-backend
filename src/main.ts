@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as process from 'process';
 import { NestFactory, PartialGraphHost } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { App } from './app';
+import App from './app.js';
 
 const NODE_PORT = process.env.NODE_PORT ? Number(process.env.NODE_PORT) : 3000;
 
