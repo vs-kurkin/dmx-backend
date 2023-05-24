@@ -20,7 +20,7 @@
     "paths": {
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
-      "@/controllers/*": ["./src/controllers/*"],
+      "@/controllers/*": ["./src/controllers/*"]
     }
   }
 }
