@@ -52,7 +52,7 @@ export default class DeviceController {
 
   @Post()
   add(@Body() device: DeviceInterface): HTTPResponse<number> {
-    const address = this.device.setDevice(device);
+    const address = this.device.addDevice(device);
 
     return { data: address };
   }
@@ -65,6 +65,6 @@ export default class DeviceController {
   ) {
     const address = this.device.getAddress(name, channel);
 
-    this.dmx.setValue(address, value);
+    this.dmx.update('', { [address]: value });
   }
 }

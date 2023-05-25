@@ -10,7 +10,7 @@ export default class DeviceService {
     return [...this.offset.values()].pop();
   }
 
-  setDevice(device: DeviceInterface): number {
+  addDevice(device: DeviceInterface): number {
     this.devices.set(device.name, device);
 
     const offset = this.getStartAddress();

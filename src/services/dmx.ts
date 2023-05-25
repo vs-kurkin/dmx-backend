@@ -4,22 +4,25 @@ import DMX from '@vk/dmx';
 
 @Injectable()
 export default class DMXService {
-  private readonly dmx: any;
-  private channels: Map<number, number> = new Map();
+  private readonly dmx: DMX;
 
   constructor() {
     this.dmx = new DMX();
   }
 
-  setValue(address: number, value: ChannelValue) {
-    this.channels[address] = value;
+  addUniverse(name: string, driver: string, options: any) {
+    return this.dmx.addUniverse(name, driver, options);
   }
 
-  getValue(address: number): number {
-    return this.channels.has(address) ? this.channels.get(address) : 0;
+  getValue(name: string, address: number): number {
+    return this.dmx.get(name, address);
   }
 
-  setAll(value) {
-    this.channels = new Map([].fill(value, this.channels.size));
+  update(name: string, values: any) {
+    this.dmx.update(name, values);
+  }
+
+  updateAll(name: string, value: number) {
+    this.dmx.updateAll(name, value);
   }
 }

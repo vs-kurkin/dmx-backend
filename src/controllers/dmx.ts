@@ -14,15 +14,19 @@ export default class DMXController {
   @ApiOkResponse({
     description: 'DMX channel value',
   })
-  async get(@Param('address') address: number) {
-    return this.dmx.getValue(address);
+  async get(
+    @Param('universe') universe: string,
+    @Param('address') address: number,
+  ) {
+    return this.dmx.getValue(universe, address);
   }
 
   @Post('/:address/:value')
   async set(
+    @Param('universe') universe: string,
     @Param('address') address: number,
     @Param('value') value: ChannelValue,
   ) {
-    return this.dmx.setValue(address, value);
+    this.dmx.update(universe, { [address]: value });
   }
 }
