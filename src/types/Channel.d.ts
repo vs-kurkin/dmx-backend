@@ -1,12 +1,12 @@
+export type ChannelType = '';
+
 export interface ChannelInterface {
   name: string;
-  value: number;
-  type?: string;
+  value?: number;
+  type?: ChannelType;
   default?: number;
-  min: number | void;
-  max: number | void;
+  min?: number;
+  max?: number;
   amount?: number;
   steps?: number[];
 }
-
-export type ChannelValue = ChannelInterface['value'];

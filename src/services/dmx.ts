@@ -1,28 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { ChannelValue } from '@/types/Channel';
-import DMX from '@vk/dmx';
+import { Injectable } from '@nestjs/common'
+import DMX from '@vk/dmx'
+
+import { DRIVERS } from '@vk/dmx'
+
+export { DRIVERS }
+
+export interface OtherDriverOptions {
+  host?: string
+  port?: string
+  baudRate?: number
+  dataBits?: number
+  stopBits?: number
+  universe?: number
+  interval?: number
+}
+
+export interface UniverseOptions extends OtherDriverOptions {
+  name: string
+  path: string
+  driver: string
+}
+
+export type DMXMapValues = Record<number, number>
 
 @Injectable()
 export default class DMXService {
-  private readonly dmx: DMX;
+  private readonly dmx: DMX
 
   constructor() {
-    this.dmx = new DMX();
+    this.dmx = new DMX()
   }
 
-  addUniverse(name: string, driver: string, options: any) {
-    return this.dmx.addUniverse(name, driver, options);
+  addUniverse(name: string, driver: string, path: string) {
+    this.dmx.addUniverse(name, driver, { path })
   }
 
-  getValue(name: string, address: number): number {
-    return this.dmx.get(name, address);
+  deleteUniverse(name: string) {
+    return this.dmx.deleteUniverse(name)
   }
 
-  update(name: string, values: any) {
-    this.dmx.update(name, values);
+  deleteAllUniverses() {
+    return this.dmx.deleteAllUniverses()
   }
 
-  updateAll(name: string, value: number) {
-    this.dmx.updateAll(name, value);
+  getUniverses(): string[] {
+    return this.dmx.getUniverses()
+  }
+
+  getDrivers(): typeof DRIVERS {
+    return DRIVERS.filter(driver => driver !== 'null')
+  }
+
+  getValue(universe: string, address: number): number {
+    return this.dmx.getValue(universe, address)
+  }
+
+  getValues(universe: string, begin?: number, end?: number): number[] {
+    return this.dmx.getValues(universe, begin, end)
+  }
+
+  setValue(universe: string, address: number, value: number): number {
+    return this.dmx.setValue(universe, address, value)
+  }
+
+  fill(universe: string, value: number, begin?: number, end?: number) {
+    this.dmx.fill(universe, value, begin, end)
+  }
+
+  update(universe: string, values: DMXMapValues) {
+    this.dmx.update(universe, values)
+  }
+
+  updateAll(universe: string, value: number) {
+    this.dmx.updateAll(universe, value)
+  }
+
+  stop(universe: string) {
+    this.dmx.getUniverse(universe).stop()
   }
 }

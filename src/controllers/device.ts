@@ -1,24 +1,14 @@
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import DeviceService from '../services/device.js';
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { type DeviceInterface } from '../types/Device.js';
+import DeviceService, { type DeviceList } from '../services/device.js';
 import DMXService from '../services/dmx.js';
-import { DeviceInterface, DeviceName } from '@/types/Device';
-import { ChannelValue } from '@/types/Channel';
-import { ApiTags, ApiNotFoundResponse } from '@nestjs/swagger';
-
-export type HTTPResponse<T> = {
-  statusCode?: number;
-  errorCode?: number;
-  error?: string;
-  data?: T;
-};
 
 @Controller('device')
 @ApiTags('Device')
@@ -31,40 +21,151 @@ export default class DeviceController {
     this.device = device;
   }
 
-  @Get()
-  async getDevices() {
+  @Get('/')
+  @ApiOperation({ summary: 'Returns device list' })
+  @ApiResponse({
+    status: 200,
+    description: 'Map {name: device}',
+    type: Object,
+  })
+  getDevices(): DeviceList {
     return this.device.getDevices();
   }
 
-  @Get('/:name')
-  @HttpCode(404)
-  @ApiNotFoundResponse({
-    description: 'Device not found',
-    status: '4XX',
+  @Delete('/')
+  @ApiOperation({ summary: 'Delete all devices' })
+  removeAll() {
+    this.device.deleteAllDevices();
+
+    return { status: 'success' }
+  }
+
+  @Post('/:name/universe/:universe/')
+  @ApiOperation({ summary: 'Add device' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
   })
-  private getDevice(
-    @Param('name') name: DeviceName,
-  ): HTTPResponse<DeviceInterface> {
-    const device = this.device.getDevice(name);
-
-    return device ? { data: device } : { statusCode: 404 };
+  @ApiParam({
+    name: 'universe',
+    description: 'Universe name',
+  })
+  @ApiBody({
+    description: 'Device object',
+    type: Object,
+  })
+  @ApiResponse({
+    description: 'DMX address of device',
+    status: 201,
+    type: Number,
+  })
+  add(
+    @Param('name') name: string,
+    @Param('universe') universe: string,
+    @Body() device: DeviceInterface,
+  ): number {
+    return this.device.addDevice(name, universe, device);
   }
 
-  @Post()
-  add(@Body() device: DeviceInterface): HTTPResponse<number> {
-    const address = this.device.addDevice(device);
+  @Delete('/:name/')
+  @ApiOperation({ summary: 'Delete device' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
+  })
+  remove(@Param('name') name: string) {
+    this.device.deleteDevice(name);
 
-    return { data: address };
+    return { status: 'success' }
   }
 
-  @Put(':id/:channel/:value')
+  @Get('/:name/channel/:number/')
+  @ApiOperation({ summary: 'Get device channel value' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
+  })
+  @ApiParam({
+    name: 'number',
+    description: 'Channel number',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    type: Number,
+    description: 'Device channel value',
+  })
+  read(@Param('name') name: string, @Param('number') channel: number): number {
+    const universe = this.device.getUniverse(name);
+    const address = this.device.getAddress(name, Number(channel));
+
+    return this.dmx.getValue(universe, address);
+  }
+
+  @Post('/:name/channel/:number/value/:value')
+  @ApiOperation({ summary: 'Set device channel value' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
+  })
+  @ApiParam({
+    name: 'number',
+    description: 'Channel number',
+    type: Number,
+  })
+  @ApiParam({
+    name: 'value',
+    description: 'Channel value',
+    type: Number,
+  })
   update(
-    @Param('name') name: DeviceName,
-    @Param('channel') channel: number,
-    @Param('value') value: ChannelValue,
+    @Param('name') name: string,
+    @Param('number') channel: number,
+    @Param('value') value: number,
   ) {
-    const address = this.device.getAddress(name, channel);
+    const universe = this.device.getUniverse(name);
+    const address = this.device.getAddress(name, Number(channel));
 
-    this.dmx.update('', { [address]: value });
+    this.dmx.setValue(universe, address, Number(value));
+
+    return { status: 'success' }
+  }
+
+  @Get('/:name/channels/')
+  @ApiOperation({ summary: 'Get all channels value of device' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
+  })
+  @ApiResponse({
+    status: 200,
+    type: Array,
+    description: 'Device channels value list',
+  })
+  readAll(@Param('name') name: string): number[] {
+    const universe = this.device.getUniverse(name);
+    const begin = this.device.getAddress(name);
+    const end = this.device.getAddressEnd(name);
+
+    return this.dmx.getValues(universe, begin, end);
+  }
+
+  @Post('/:name/channels/:value')
+  @ApiOperation({ summary: 'Set all channels value of device' })
+  @ApiParam({
+    name: 'name',
+    description: 'Device name',
+  })
+  updateAll(
+    @Param('name') name: string,
+    @Param('value') value: number,
+  ) {
+    const universe = this.device.getUniverse(name);
+    const begin = this.device.getAddress(name);
+    const end = this.device.getAddressEnd(name);
+
+    this.dmx.fill(universe, Number(value), begin, end);
+
+    return { status: 'success' }
   }
 }
