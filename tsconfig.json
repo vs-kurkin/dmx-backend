@@ -15,10 +15,10 @@
     "noImplicitAny": false,
     "outDir": "dist",
     "skipLibCheck": true,
-    "strictBindCallApply": false,
-    "strictNullChecks": false,
     "sourceMap": true,
     "strict": true,
+    "strictBindCallApply": false,
+    "strictNullChecks": false,
     "target": "ESNext",
     "types": [
       "node"
@@ -30,6 +30,6 @@
   ],
   "include": [
     "src/**/*.ts",
-    "tests/**/*.ts",
+    "tests/**/*.ts"
   ]
 }

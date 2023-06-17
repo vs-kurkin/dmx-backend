@@ -1,10 +1,10 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 
-import webSocketConfig from '../configs/websocket.js'
+import webSocketConfig, { PORT } from '../configs/websocket.js'
 import DMXService from '../services/dmx.js'
 
-@WebSocketGateway(8081, webSocketConfig())
+@WebSocketGateway(PORT, webSocketConfig())
 export default class GatewayWebSocket {
   @WebSocketServer()
   server: Server
@@ -13,13 +13,20 @@ export default class GatewayWebSocket {
     this.dmx = dmx
   }
 
-  @SubscribeMessage('channel')
-  channel(client: Socket, { name, channel, value }) {
+  @SubscribeMessage('update')
+  channel(client: Socket, {
+    name,
+    channel,
+    value,
+  }) {
     this.dmx.setValue(name, channel, value)
   }
 
   @SubscribeMessage('channels')
-  channels(client: Socket, { name, values }) {
+  channels(client: Socket, {
+    name,
+    values,
+  }) {
     this.dmx.update(name, values)
   }
 

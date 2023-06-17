@@ -6,8 +6,8 @@ import ServerConfig from './configs/server.js'
 import SwaggerConfig from './configs/swagger.js'
 import WebSocketConfig from './configs/websocket.js'
 import DeviceController from './controllers/device.js'
-import SerialController from './controllers/serial.js'
 import DMXController from './controllers/dmx.js'
+import SerialController from './controllers/serial.js'
 import GatewayWebSocket from './events/websocket.js'
 import DeviceService from './services/device.js'
 import DMXService from './services/dmx.js'
@@ -27,4 +27,5 @@ import SerialService from './services/serial.js'
   providers: [GatewayWebSocket, SerialService, DMXService, DeviceService],
 
 })
-export default class App {}
+export default class App {
+}

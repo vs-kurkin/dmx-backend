@@ -1,12 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import DMXService, { type DMXMapValues, type UniverseOptions } from '../services/dmx.js'
 
 @Controller('dmx')
@@ -99,7 +92,7 @@ export default class DMXController {
   })
   setValues(
     @Param('name') universe: string,
-    @Param('value') value: number
+    @Param('value') value: number,
   ) {
     this.dmx.updateAll(universe, Number(value))
 
@@ -142,7 +135,7 @@ export default class DMXController {
   })
   getChannelValue(
     @Param('name') universe: string,
-    @Param('address') address: number
+    @Param('address') address: number,
   ) {
     return this.dmx.getValue(universe, Number(address))
   }

@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import DMX from '@vk/dmx'
-
-import { DRIVERS } from '@vk/dmx'
+import DMX, { DRIVERS } from '@vk/dmx'
 
 export { DRIVERS }
 

@@ -1,12 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import SerialService from '../services/serial.js';
+import { Controller, Get } from '@nestjs/common'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import SerialService from '../services/serial.js'
 
 @Controller('serial')
 @ApiTags('Serial')
 export default class SerialController {
   constructor(private readonly serial: SerialService) {
-    this.serial = serial;
+    this.serial = serial
   }
 
   @Get('/')
@@ -17,6 +17,6 @@ export default class SerialController {
     description: 'Port info list',
   })
   getDevices() {
-    return this.serial.list();
+    return this.serial.list()
   }
 }

@@ -1,14 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { type DeviceInterface } from '../types/Device.js';
-import DeviceService, { type DeviceList } from '../services/device.js';
-import DMXService from '../services/dmx.js';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import DeviceService, { type DeviceList } from '../services/device.js'
+import DMXService from '../services/dmx.js'
+import { type DeviceInterface } from '../types/Device.js'
 
 @Controller('device')
 @ApiTags('Device')
@@ -17,8 +11,8 @@ export default class DeviceController {
     private readonly dmx: DMXService,
     private readonly device: DeviceService,
   ) {
-    this.dmx = dmx;
-    this.device = device;
+    this.dmx = dmx
+    this.device = device
   }
 
   @Get('/')
@@ -29,13 +23,13 @@ export default class DeviceController {
     type: Object,
   })
   getDevices(): DeviceList {
-    return this.device.getDevices();
+    return this.device.getDevices()
   }
 
   @Delete('/')
   @ApiOperation({ summary: 'Delete all devices' })
   removeAll() {
-    this.device.deleteAllDevices();
+    this.device.deleteAllDevices()
 
     return { status: 'success' }
   }
@@ -64,7 +58,7 @@ export default class DeviceController {
     @Param('universe') universe: string,
     @Body() device: DeviceInterface,
   ): number {
-    return this.device.addDevice(name, universe, device);
+    return this.device.addDevice(name, universe, device)
   }
 
   @Delete('/:name/')
@@ -74,7 +68,7 @@ export default class DeviceController {
     description: 'Device name',
   })
   remove(@Param('name') name: string) {
-    this.device.deleteDevice(name);
+    this.device.deleteDevice(name)
 
     return { status: 'success' }
   }
@@ -96,10 +90,10 @@ export default class DeviceController {
     description: 'Device channel value',
   })
   read(@Param('name') name: string, @Param('number') channel: number): number {
-    const universe = this.device.getUniverse(name);
-    const address = this.device.getAddress(name, Number(channel));
+    const universe = this.device.getUniverse(name)
+    const address = this.device.getAddress(name, Number(channel))
 
-    return this.dmx.getValue(universe, address);
+    return this.dmx.getValue(universe, address)
   }
 
   @Post('/:name/channel/:number/value/:value')
@@ -123,10 +117,10 @@ export default class DeviceController {
     @Param('number') channel: number,
     @Param('value') value: number,
   ) {
-    const universe = this.device.getUniverse(name);
-    const address = this.device.getAddress(name, Number(channel));
+    const universe = this.device.getUniverse(name)
+    const address = this.device.getAddress(name, Number(channel))
 
-    this.dmx.setValue(universe, address, Number(value));
+    this.dmx.setValue(universe, address, Number(value))
 
     return { status: 'success' }
   }
@@ -143,11 +137,11 @@ export default class DeviceController {
     description: 'Device channels value list',
   })
   readAll(@Param('name') name: string): number[] {
-    const universe = this.device.getUniverse(name);
-    const begin = this.device.getAddress(name);
-    const end = this.device.getAddressEnd(name);
+    const universe = this.device.getUniverse(name)
+    const begin = this.device.getAddress(name)
+    const end = this.device.getAddressEnd(name)
 
-    return this.dmx.getValues(universe, begin, end);
+    return this.dmx.getValues(universe, begin, end)
   }
 
   @Post('/:name/channels/:value')
@@ -160,11 +154,11 @@ export default class DeviceController {
     @Param('name') name: string,
     @Param('value') value: number,
   ) {
-    const universe = this.device.getUniverse(name);
-    const begin = this.device.getAddress(name);
-    const end = this.device.getAddressEnd(name);
+    const universe = this.device.getUniverse(name)
+    const begin = this.device.getAddress(name)
+    const end = this.device.getAddressEnd(name)
 
-    this.dmx.fill(universe, Number(value), begin, end);
+    this.dmx.fill(universe, Number(value), begin, end)
 
     return { status: 'success' }
   }

@@ -6,14 +6,17 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as fs from 'fs'
 import * as process from 'process'
 import AppModule from './app.js'
-import { type ServerConfig } from './configs/server.js';
-import { type SwaggerConfig } from './configs/swagger.js';
+import { type ServerConfig } from './configs/server.js'
+import { type SwaggerConfig } from './configs/swagger.js'
 import logger from './utils/logger.js'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
-  app.enableCors()
+  app.enableCors({
+    origin: process.env.NODE_ENV === 'production' ? false : '*',
+  })
+
   setupLogger(app)
   setupSwagger(app)
   setupValidationPipe(app)
@@ -27,7 +30,12 @@ const setupLogger = (app: INestApplication) => {
 
 const setupSwagger = (app: INestApplication) => {
   const config = app.get(ConfigService)
-  const {title, description, version, path} = config.get('swagger') as SwaggerConfig
+  const {
+    title,
+    description,
+    version,
+    path,
+  } = config.get('swagger') as SwaggerConfig
 
   const builderConfig = new DocumentBuilder()
     .setTitle(title)
@@ -46,7 +54,7 @@ const setupValidationPipe = (app: INestApplication) => {
 
 const listenServer = async (app: INestApplication) => {
   const config = app.get(ConfigService)
-  const { port} = config.get('server') as ServerConfig
+  const { port } = config.get('server') as ServerConfig
 
   await app.listen(port)
 

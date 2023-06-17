@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 
 interface EnvironmentVariables {
   HOST: string;
@@ -14,6 +14,6 @@ export class Config {
   }
 
   get isProduction(): boolean {
-    return this.config.get('NODE_ENV') === 'production';
+    return this.config.get('NODE_ENV') === 'production'
   }
 }
