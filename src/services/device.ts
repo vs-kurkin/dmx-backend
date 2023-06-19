@@ -9,10 +9,6 @@ export default class DeviceService {
   private devices = new Map<string, DeviceInterface>()
   private universes = new Map<string, string>()
 
-  private getFreeAddress(): number {
-    return [...this.offset.values()].pop() || 0
-  }
-
   addDevice(name: string, universe: string, device: DeviceInterface): number {
     if (this.devices.has(name)) {
       throw new Error(`Device ${name} already exists`)
@@ -31,7 +27,7 @@ export default class DeviceService {
     return this.devices.get(name)
   }
 
-  deleteDevice(name: string): void {
+  deleteDevice(name: string) {
     if (!this.devices.has(name)) {
       throw new Error(`Device ${name} does not exist`)
     }
@@ -41,7 +37,7 @@ export default class DeviceService {
     this.universes.delete(name)
   }
 
-  deleteAllDevices(): void {
+  deleteAllDevices() {
     this.offset.clear()
     this.devices.clear()
     this.universes.clear()
@@ -80,5 +76,9 @@ export default class DeviceService {
 
   getAddressEnd(name: string) {
     return (this.offset.get(name) || 0) + 1
+  }
+
+  private getFreeAddress(): number {
+    return [...this.offset.values()].pop() || 0
   }
 }
