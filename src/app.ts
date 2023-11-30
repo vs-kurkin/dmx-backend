@@ -15,16 +15,30 @@ import SerialService from './services/serial.js'
 
 @Module({
   imports: [
+    DevtoolsModule.register(DevToolsConfig()),
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
       envFilePath: ['.env.development', '.env.production'],
-      load: [ServerConfig, WebSocketConfig, DevToolsConfig, SwaggerConfig],
+      load: [
+        ServerConfig,
+        WebSocketConfig,
+        DevToolsConfig,
+        SwaggerConfig
+      ],
     }),
-    DevtoolsModule.register(DevToolsConfig()),
   ],
-  controllers: [SerialController, DMXController, DeviceController],
-  providers: [GatewayWebSocket, SerialService, DMXService, DeviceService],
+  controllers: [
+    SerialController,
+    DMXController,
+    DeviceController
+  ],
+  providers: [
+    GatewayWebSocket,
+    SerialService,
+    DMXService,
+    DeviceService
+  ],
 
 })
 export default class App {

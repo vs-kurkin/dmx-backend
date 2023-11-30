@@ -22,7 +22,10 @@
   ],
   "root": true,
   "rules": {
-    "semi": "off",
+    "semi": [
+      "error",
+      "never"
+    ],
     "quotes": [
       2,
       "single",
