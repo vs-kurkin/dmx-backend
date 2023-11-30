@@ -8,13 +8,14 @@ import * as process from 'process'
 import AppModule from './app.js'
 import { type ServerConfig } from './configs/server.js'
 import { type SwaggerConfig } from './configs/swagger.js'
+import { isProduction } from './configs/env.js'
 import logger from './utils/logger.js'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production' ? false : '*',
+    origin: isProduction() ? false : '*',
   })
 
   setupLogger(app)

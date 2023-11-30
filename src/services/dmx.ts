@@ -46,7 +46,7 @@ export default class DMXService {
   }
 
   getDrivers(): typeof DRIVERS {
-    return DRIVERS.filter(driver => driver !== 'null')
+    return DRIVERS.filter((driver: string) => driver !== 'null')
   }
 
   getValue(universe: string, address: number): number {

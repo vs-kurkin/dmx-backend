@@ -1,17 +1,18 @@
 import { registerAs } from '@nestjs/config'
 import { GatewayMetadata } from '@nestjs/websockets'
-import * as process from 'process'
+import { isProduction, NEST_SOCKET_PORT } from './env.js'
 
-export const PORT = Number(process.env.NEST_SOCKET_PORT) || 8081
+export const PORT = Number(NEST_SOCKET_PORT) || 8081
+export const PING = 1000 * 60 * 30
 
 export default registerAs(
   'webSocket',
   (): GatewayMetadata => ({
     path: '/ws',
-    pingInterval: 1000 * 60 * 30,
+    pingInterval: PING,
     transports: ['websocket'],
     cors: {
-      origin: process.env.NODE_ENV === 'production' ? false : ['*'],
+      origin: isProduction() ? false : ['*'],
     },
   }),
 )

@@ -14,24 +14,17 @@ export default class GatewayWebSocket {
   }
 
   @SubscribeMessage('update')
-  channel(client: Socket, {
-    name,
-    channel,
-    value,
-  }) {
+  channel(_: Socket, { name, channel, value }) {
     this.dmx.setValue(name, channel, value)
   }
 
   @SubscribeMessage('channels')
-  channels(client: Socket, {
-    name,
-    values,
-  }) {
+  channels(_: Socket, { name, values }) {
     this.dmx.update(name, values)
   }
 
   @SubscribeMessage('stop')
-  stop(client: Socket, { name }) {
+  stop(_: Socket, { name }) {
     this.dmx.stop(name)
   }
 }
