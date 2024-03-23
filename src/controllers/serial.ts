@@ -1,6 +1,6 @@
+import SerialService from '#services/serial.ts'
 import { Controller, Get } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import SerialService from '../services/serial.js'
 
 @Controller('serial')
 @ApiTags('Serial')

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import type { ConfigService } from '@nestjs/config'
 
 interface EnvironmentVariables {
   HOST: string;
   PORT: number;
-  NODE_ENV: 'development' | 'testing' | 'production'
+  NODE_ENV: 'development' | 'testing' | 'production';
 }
 
 @Injectable()

@@ -8,15 +8,9 @@ insert_final_newline=true
 trim_trailing_whitespace=true
 charset=utf-8
 ij_typescript_force_semicolon_style=false
-
-[*.min.*]
-indent_style=unset
-trim_trailing_whitespace=false
-insert_final_newline=unset
-
-[*.{md,txt}]
-indent_size=4
-trim_trailing_whitespace=false
+ij_typescript_use_semicolon_after_statement=false
+ij_javascript_force_semicolon_style=false
+ij_javascript_use_semicolon_after_statement=false
 
 [CHANGELOG.md]
 indent_size=unset

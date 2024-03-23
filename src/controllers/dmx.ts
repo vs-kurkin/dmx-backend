@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import DMXService, { type DMXMapValues, type UniverseOptions } from '#services/dmx.ts'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import DMXService, { type DMXMapValues, type UniverseOptions } from '../services/dmx.js'
 
 @Controller('dmx')
 @ApiTags('DMX')
@@ -14,7 +14,7 @@ export default class DMXController {
   @ApiResponse({
     status: 200,
     type: Object,
-    description: 'Universes name list',
+    description: 'Universes id list',
   })
   getUniverses(): string[] {
     return this.dmx.getUniverses()
@@ -45,84 +45,76 @@ export default class DMXController {
     description: 'Universe options',
     type: Object,
   })
-  addUniverse(
-    @Body() options: UniverseOptions,
-  ) {
-    this.dmx.addUniverse(options.name, options.driver, options.path)
+  async addUniverse(@Body() options: UniverseOptions) {
+    await this.dmx.addUniverse(options)
 
     return { status: 'success' }
   }
 
-  @Delete('/:name/')
+  @Delete('/:id/')
   @ApiOperation({ summary: 'Delete universe' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
-  deleteUniverse(@Param('name') name: string) {
-    this.dmx.deleteUniverse(name)
+  async deleteUniverse(@Param('id') id: string) {
+    await this.dmx.deleteUniverse(id)
 
     return { status: 'success' }
   }
 
-  @Get('/:name/values/')
+  @Get('/:id/values/')
   @ApiOperation({ summary: 'Get DMX values' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
   @ApiOkResponse({
     description: 'Array of DMX values',
     type: Array,
   })
-  getValues(@Param('name') universe: string) {
+  getValues(@Param('id') universe: string) {
     return this.dmx.getValues(universe)
   }
 
-  @Post('/:name/values/:value')
+  @Patch('/:id/values/:value')
   @ApiOperation({ summary: 'Set DMX values' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
   @ApiParam({
     name: 'value',
     description: 'New DMX channels value',
     type: Number,
   })
-  setValues(
-    @Param('name') universe: string,
-    @Param('value') value: number,
-  ) {
+  setValues(@Param('id') universe: string, @Param('value') value: number) {
     this.dmx.updateAll(universe, Number(value))
 
     return { status: 'success' }
   }
 
-  @Post('/:name/channel/')
+  @Patch('/:id/channel/')
   @ApiOperation({ summary: 'Sets several DMX channels' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
   @ApiBody({
     description: 'New DMX values',
     type: Object,
   })
-  setChannel(
-    @Param('name') universe: string,
-    @Body() values: DMXMapValues,
-  ) {
+  setChannel(@Param('id') universe: string, @Body() values: DMXMapValues) {
     this.dmx.update(universe, values)
 
     return { status: 'success' }
   }
 
-  @Get('/:name/channel/:address/value/:value')
+  @Get('/:id/channel/:address')
   @ApiOperation({ summary: 'Get DMX channel value' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
   @ApiParam({
     name: 'address',
@@ -134,17 +126,17 @@ export default class DMXController {
     type: Number,
   })
   getChannelValue(
-    @Param('name') universe: string,
+    @Param('id') universe: string,
     @Param('address') address: number,
   ) {
     return this.dmx.getValue(universe, Number(address))
   }
 
-  @Post('/:name/channel/:address/value/:value')
+  @Patch('/:id/channel/:address/value/:value')
   @ApiOperation({ summary: 'Set DMX channel value' })
   @ApiParam({
-    name: 'name',
-    description: 'Universe name',
+    name: 'id',
+    description: 'Universe id',
   })
   @ApiParam({
     name: 'address',
@@ -157,7 +149,7 @@ export default class DMXController {
     type: Number,
   })
   setChannelValue(
-    @Param('name') universe: string,
+    @Param('id') universe: string,
     @Param('address') address: number,
     @Param('value') value: number,
   ) {

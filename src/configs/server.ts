@@ -10,7 +10,7 @@ export interface ServerConfig {
 
 export default registerAs('server', (): ServerConfig => ({
   schema: 'http',
-  host: process.env.NEST_API_HOST,
+  host: process.env.NEST_API_HOST ?? '',
   port: Number(process.env.NEST_API_PORT),
   path: '/api',
 }))

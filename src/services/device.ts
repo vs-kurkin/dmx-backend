@@ -1,7 +1,26 @@
 import { Injectable } from '@nestjs/common'
-import { DeviceInterface } from '../types/Device.js'
 
-export type DeviceList = Record<number, DeviceInterface>;
+export type ChannelType = '';
+
+export type ChannelInterface = {
+  name: string;
+  value?: number;
+  type?: ChannelType;
+  default?: number;
+  min?: number;
+  max?: number;
+  amount?: number;
+  steps?: number[];
+}
+
+export type DeviceInterface = {
+  vendor: string;
+  model: string;
+  mode: string;
+  channels: ChannelInterface[];
+}
+
+export type DeviceList = Record<string, DeviceInterface>
 
 @Injectable()
 export default class DeviceService {
@@ -9,32 +28,32 @@ export default class DeviceService {
   private devices = new Map<string, DeviceInterface>()
   private universes = new Map<string, string>()
 
-  addDevice(name: string, universe: string, device: DeviceInterface): number {
-    if (this.devices.has(name)) {
-      throw new Error(`Device ${name} already exists`)
+  addDevice(id: string, universe: string, device: DeviceInterface): number {
+    if (this.devices.has(id)) {
+      throw new Error(`Device ${id} already exists`)
     }
 
-    const offset = this.offset.get(name) || this.getFreeAddress()
+    const offset = this.offset.get(id) || this.getFreeAddress()
 
-    this.offset.set(name, offset + device.channels.length)
-    this.devices.set(name, device)
-    this.universes.set(name, universe)
+    this.offset.set(id, offset + device.channels.length)
+    this.universes.set(id, universe)
+    this.devices.set(id, device)
 
     return offset
   }
 
-  getDevice(name: string): DeviceInterface | void {
-    return this.devices.get(name)
+  getDevice(id: string): DeviceInterface | void {
+    return this.devices.get(id)
   }
 
-  deleteDevice(name: string) {
-    if (!this.devices.has(name)) {
-      throw new Error(`Device ${name} does not exist`)
+  deleteDevice(id: string) {
+    if (!this.devices.has(id)) {
+      throw new Error(`Device ${id} does not exist`)
     }
 
-    this.offset.delete(name)
-    this.devices.delete(name)
-    this.universes.delete(name)
+    this.offset.delete(id)
+    this.devices.delete(id)
+    this.universes.delete(id)
   }
 
   deleteAllDevices() {
@@ -43,16 +62,16 @@ export default class DeviceService {
     this.universes.clear()
   }
 
-  getUniverse(name: string): string {
-    return this.universes.get(name)
+  getUniverse(id: string): string {
+    return this.universes.get(id) as string
   }
 
   getDevices(): DeviceList {
     const result = {}
 
     Array.from(this.devices.keys()).reduce(
-      (list: DeviceList, name: string) => {
-        list[name] = this.devices.get(name)
+      (list: DeviceList, id: string) => {
+        list[id] = this.devices.get(id) as DeviceInterface
 
         return list
       },
@@ -62,20 +81,20 @@ export default class DeviceService {
     return result
   }
 
-  getAddress(name: string, channel = 1): number {
-    const device = this.getDevice(name)
+  getAddress(id: string, channel = 1): number {
+    const device = this.getDevice(id)
 
     if (!device) {
-      throw new Error(`Device ${name} not found`)
+      throw new Error(`Device ${id} not found`)
     }
 
-    const end = this.getAddressEnd(name)
+    const end = this.getAddressEnd(id)
 
     return end - device.channels.length + channel - 1
   }
 
-  getAddressEnd(name: string) {
-    return (this.offset.get(name) || 0) + 1
+  getAddressEnd(id: string) {
+    return (this.offset.get(id) || 0) + 1
   }
 
   private getFreeAddress(): number {

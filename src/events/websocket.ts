@@ -1,30 +1,36 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
+import webSocketConfig, { getSocketPort } from '#configs/websocket.ts'
+import DMXService, { type DMXMapValues } from '#services/dmx.ts'
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 
-import webSocketConfig, { PORT } from '../configs/websocket.js'
-import DMXService from '../services/dmx.js'
-
-@WebSocketGateway(PORT, webSocketConfig())
+@WebSocketGateway(getSocketPort(), webSocketConfig())
 export default class GatewayWebSocket {
   @WebSocketServer()
-  server: Server
+  server: Server | undefined
 
   constructor(private readonly dmx: DMXService) {
     this.dmx = dmx
   }
 
   @SubscribeMessage('update')
-  channel(_: Socket, { name, channel, value }) {
-    this.dmx.setValue(name, channel, value)
+  channel(
+    _: Socket,
+    @MessageBody() { id, channel, value }: { id: string; channel: number; value: number },
+  ) {
+    this.dmx.setValue(id, channel, value)
   }
 
   @SubscribeMessage('channels')
-  channels(_: Socket, { name, values }) {
-    this.dmx.update(name, values)
+  channels(
+    _: Socket,
+    @MessageBody() id: string,
+    @MessageBody() values: DMXMapValues,
+  ) {
+    this.dmx.update(id, values)
   }
 
   @SubscribeMessage('stop')
-  stop(_: Socket, { name }) {
-    this.dmx.stop(name)
+  stop(_: Socket, @MessageBody() id: string) {
+    this.dmx.stop(id)
   }
 }
