@@ -1,0 +1,624 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/sse": {
+      "get": {
+        "operationId": "ServerEventsController_sse",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "SSE stream"
+          }
+        },
+        "tags": [
+          "SSE"
+        ]
+      }
+    },
+    "/serial": {
+      "get": {
+        "operationId": "SerialController_getList",
+        "summary": "Returns serial ports info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Port info list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      },
+      "delete": {
+        "operationId": "SerialController_dropSerial",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      },
+      "post": {
+        "operationId": "SerialController_addSerial",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      }
+    },
+    "/serial/{id}": {
+      "delete": {
+        "operationId": "SerialController_deleteSerial",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      }
+    },
+    "/serial/current": {
+      "get": {
+        "operationId": "SerialController_getCurrent",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      },
+      "post": {
+        "operationId": "SerialController_setCurrent",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      }
+    },
+    "/serial/drivers": {
+      "get": {
+        "operationId": "SerialController_getDrivers",
+        "summary": "Returns supported driver list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Driver list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Serial"
+        ]
+      }
+    },
+    "/dmx": {
+      "get": {
+        "operationId": "DMXController_getUniverses",
+        "summary": "Returns universes list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Universes id list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      },
+      "delete": {
+        "operationId": "DMXController_deleteAllUniverses",
+        "summary": "Delete all universes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      },
+      "post": {
+        "operationId": "DMXController_addUniverse",
+        "summary": "Add universe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Universe options",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}": {
+      "delete": {
+        "operationId": "DMXController_deleteUniverse",
+        "summary": "Delete universe",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}/values": {
+      "get": {
+        "operationId": "DMXController_getValues",
+        "summary": "Get DMX values",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of DMX values",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}/values/{value}": {
+      "patch": {
+        "operationId": "DMXController_setValues",
+        "summary": "Set DMX values",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "required": true,
+            "in": "path",
+            "description": "New DMX channels value",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}/channel": {
+      "patch": {
+        "operationId": "DMXController_setChannel",
+        "summary": "Sets several DMX channels",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New DMX values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}/channel/{address}": {
+      "get": {
+        "operationId": "DMXController_getChannelValue",
+        "summary": "Get DMX channel value",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "description": "DMX channel address",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DMX channel value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/dmx/{id}/channel/{address}/value/{value}": {
+      "patch": {
+        "operationId": "DMXController_setChannelValue",
+        "summary": "Set DMX channel value",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Universe id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "description": "DMX channel address",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "value",
+            "required": true,
+            "in": "path",
+            "description": "DMX channel value",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DMX"
+        ]
+      }
+    },
+    "/device": {
+      "get": {
+        "operationId": "DeviceController_getDevices",
+        "summary": "Returns device list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Map {index: device}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      },
+      "delete": {
+        "operationId": "DeviceController_removeAll",
+        "summary": "Delete all devices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      },
+      "post": {
+        "operationId": "DeviceController_add",
+        "summary": "Add new device",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Device object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "DMX address of device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      },
+      "patch": {
+        "operationId": "DeviceController_set",
+        "summary": "Set bulk devices",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Device list",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/device/{index}": {
+      "get": {
+        "operationId": "DeviceController_get",
+        "summary": "Get device",
+        "parameters": [
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "description": "Device index",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      },
+      "patch": {
+        "operationId": "DeviceController_update",
+        "summary": "Update device",
+        "parameters": [
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "description": "Device index",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Device object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      },
+      "delete": {
+        "operationId": "DeviceController_remove",
+        "summary": "Delete device",
+        "parameters": [
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "description": "Device index",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/device/dmx/{index}": {
+      "get": {
+        "operationId": "DeviceController_getDMXChannel",
+        "summary": "Get DMX channel",
+        "parameters": [
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "description": "Device index",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Device"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "@dmx-cloud/dmx-backend",
+    "description": "",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "Object": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

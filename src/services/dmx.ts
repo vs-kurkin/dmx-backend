@@ -1,90 +1,81 @@
-import { Universe } from '#schemas/universe.ts'
+import { Universe } from '#schemas/universe'
+import DMX from '@dmx-cloud/dmx'
+import type { SerialID, SerialOptions, SerialUniverses } from '@dmx-cloud/dmx-types'
 import { Injectable } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import DMX, { DRIVERS } from '@vk/dmx'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import { Model } from 'mongoose'
 
-export { DRIVERS }
-
-export type UniverseOptions = {
-  host?: string;
-  port?: string;
-  baudRate?: number;
-  dataBits?: number;
-  stopBits?: number;
-  universe?: number;
-  interval?: number;
-  id: string;
-  path: string;
-  driver: string;
-}
-
 export type DMXMapValues = Record<number, number>
+export type UniverseModel = Model<typeof Universe>
 
 @Injectable()
 export default class DMXService {
-  private readonly declare dmx: typeof DMX
+  protected readonly events: EventEmitter2
+  private readonly declare dmx: DMX
 
-  constructor(@InjectModel(Universe.name) private readonly model: Model<typeof Universe>) {
+  constructor(
+    events: EventEmitter2,
+  ) {
     this.dmx = new DMX()
-    this.model = model
 
-    // FIXME: Error universe already exists
-    // FIXME: Error duplicate key error collection: dmx.universes
-    model.db.dropCollection('universes').then(() => {
-      console.log('Collection dropped')
-    })
+    this.events = events
   }
 
-  async addUniverse(options: UniverseOptions) {
-    this.dmx.addUniverse(options.id, options.driver, { path: options.path })
+  addUniverse({ driver, id, path }: SerialOptions) {
+    this.dmx.addUniverse(id, driver, { path })
 
-    await this.model.create(options)
+    this.events.emit('add', id)
   }
 
-  async deleteUniverse(id: string) {
+  deleteUniverse(id: SerialID) {
     this.dmx.deleteUniverse(id)
 
-    await this.model.deleteOne({ id })
+    this.events.emit('delete', id)
   }
 
   deleteAllUniverses() {
-    return this.dmx.deleteAllUniverses()
+    this.dmx.deleteAllUniverses()
+
+    this.events.emit('clear')
   }
 
-  getUniverses(): string[] {
+  getUniverses(): SerialUniverses {
     return this.dmx.getUniverses()
   }
 
-  getDrivers(): typeof DRIVERS {
-    return DRIVERS.filter((driver: string) => driver !== 'null')
+  getValue(id: SerialID, address: number): number {
+    return this.dmx.getValue(id, address)
   }
 
-  getValue(universe?: string, address?: number): number {
-    return this.dmx.getValue(universe, address)
+  getValues(id: SerialID, begin?: number, end?: number): number[] {
+    return this.dmx.getValues(id, begin, end)
   }
 
-  getValues(universe?: string, begin?: number, end?: number): number[] {
-    return this.dmx.getValues(universe, begin, end)
+  setValue(id: SerialID, address: number, value: number) {
+    this.dmx.setValue(id, address, value)
+
+    this.events.emit('update', id)
   }
 
-  setValue(universe: string, address: number, value: number): number {
-    return this.dmx.setValue(universe, address, value)
+  fill(id: SerialID, value: number, begin?: number, end?: number) {
+    this.dmx.fill(id, value, begin, end)
+
+    this.events.emit('update', id)
   }
 
-  fill(universe: string, value: number, begin?: number, end?: number) {
-    this.dmx.fill(universe, value, begin, end)
+  update(id: SerialID, values: DMXMapValues) {
+    this.dmx.update(id, values)
+
+    this.events.emit('update', id)
   }
 
-  update(universe: string, values: DMXMapValues) {
-    this.dmx.update(universe, values)
+  updateAll(id: SerialID, value: number) {
+    this.dmx.updateAll(id, value)
+
+    this.events.emit('update', id)
   }
 
-  updateAll(universe: string, value: number) {
-    this.dmx.updateAll(universe, value)
-  }
-
-  stop(universe: string) {
-    this.dmx.getUniverse(universe).stop()
+  stop(id: SerialID) {
+    this.dmx.getUniverse(id).stop()
   }
 }

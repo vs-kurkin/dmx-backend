@@ -9,3 +9,4 @@ tslint.json
 tsconfig.json
 
 *.tsbuildinfo
+/tmp/

@@ -1,48 +1,37 @@
-import DeviceService, { type DeviceInterface, type DeviceList } from '#services/device.ts'
-import DMXService from '#services/dmx.ts'
+import DeviceService from '#services/device'
+import type { Device, DeviceList } from '@dmx-cloud/dmx-types'
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @Controller('device')
 @ApiTags('Device')
 export default class DeviceController {
-  constructor(
-    private readonly dmx: DMXService,
-    private readonly device: DeviceService,
-  ) {
-    this.dmx = dmx
-    this.device = device
-  }
+  protected readonly deviceService: DeviceService
 
+  constructor(device: DeviceService) {
+    this.deviceService = device
+  }
   @Get('/')
   @ApiOperation({ summary: 'Returns device list' })
   @ApiResponse({
     status: 200,
-    description: 'Map {id: device}',
+    description: 'Map {index: device}',
     type: Object,
   })
-  getDevices(): DeviceList {
-    return this.device.getDevices()
+  getDevices() {
+    return this.deviceService.getDevices()
   }
 
   @Delete('/')
   @ApiOperation({ summary: 'Delete all devices' })
-  removeAll() {
-    this.device.deleteAllDevices()
+  async removeAll() {
+    await this.deviceService.deleteAllDevices()
 
     return { status: 'success' }
   }
 
-  @Post('/:id/universe/:universe/')
-  @ApiOperation({ summary: 'Add device' })
-  @ApiParam({
-    name: 'id',
-    description: 'Device id',
-  })
-  @ApiParam({
-    name: 'universe',
-    description: 'Universe id',
-  })
+  @Post('/')
+  @ApiOperation({ summary: 'Add new device' })
   @ApiBody({
     description: 'Device object',
     type: Object,
@@ -52,110 +41,90 @@ export default class DeviceController {
     status: 201,
     type: Number,
   })
-  add(
-    @Param('id') id: string,
-    @Param('universe') universe: string,
-    @Body() device: DeviceInterface,
-  ): number {
-    return this.device.addDevice(id, universe, device)
+  async add(
+    @Body() device: Device,
+  ) {
+    await this.deviceService.addDevice(device)
+
+    return { status: 'success' }
   }
 
-  @Delete('/:id/')
+  @Patch('/')
+  @ApiOperation({ summary: 'Set bulk devices' })
+  @ApiBody({
+    description: 'Device list',
+    type: Object,
+  })
+  @ApiResponse({
+    status: 201,
+  })
+  async set(
+    @Body() list: DeviceList,
+  ) {
+    await this.deviceService.setDevices(list)
+
+    return { status: 'success' }
+  }
+
+  @Get('/:index')
+  @ApiOperation({ summary: 'Get device' })
+  @ApiParam({
+    name: 'index',
+    description: 'Device index',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Device object',
+    type: Object,
+  })
+  get(@Param('index') index: number) {
+    return this.deviceService.getDevice(index)
+  }
+
+  @Patch('/:index')
+  @ApiOperation({ summary: 'Update device' })
+  @ApiParam({
+    name: 'index',
+    description: 'Device index',
+  })
+  @ApiBody({
+    description: 'Device object',
+    type: Object,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Device object',
+    type: Object,
+  })
+  async update(
+    @Param('index') index: number,
+    @Body() device: Device,
+  ) {
+    await this.deviceService.updateDevice(index, device)
+
+    return { status: 'success' }
+  }
+
+  @Delete('/:index/')
   @ApiOperation({ summary: 'Delete device' })
   @ApiParam({
-    name: 'id',
-    description: 'Device id',
+    name: 'index',
+    description: 'Device index',
   })
-  remove(@Param('id') id: string) {
-    this.device.deleteDevice(id)
+  async remove(@Param('index') index: number) {
+    await this.deviceService.deleteDevice(index)
 
     return { status: 'success' }
   }
 
-  @Get('/:id/channel/:number/')
-  @ApiOperation({ summary: 'Get device channel value' })
+  @Get('/dmx/:index/')
   @ApiParam({
-    name: 'id',
-    description: 'Device id',
+    name: 'index',
+    description: 'Device index',
   })
-  @ApiParam({
-    name: 'number',
-    description: 'Channel number',
-    type: Number,
-  })
-  @ApiResponse({
-    status: 200,
-    type: Number,
-    description: 'Device channel value',
-  })
-  read(@Param('id') id: string, @Param('number') channel: number): number {
-    const universe = this.device.getUniverse(id)
-    const address = this.device.getAddress(id, Number(channel))
-
-    return this.dmx.getValue(universe, address)
+  @ApiOperation({ summary: 'Get DMX channel' })
+  getDMXChannel(@Param('index') index: number) {
+    return this.deviceService.getDeviceDMX(index)
   }
 
-  @Patch('/:id/channel/:number/value/:value')
-  @ApiOperation({ summary: 'Set device channel value' })
-  @ApiParam({
-    name: 'id',
-    description: 'Device id',
-  })
-  @ApiParam({
-    name: 'number',
-    description: 'Channel number',
-    type: Number,
-  })
-  @ApiParam({
-    name: 'value',
-    description: 'Channel value',
-    type: Number,
-  })
-  update(
-    @Param('id') id: string,
-    @Param('number') channel: number,
-    @Param('value') value: number,
-  ) {
-    const universe = this.device.getUniverse(id)
-    const address = this.device.getAddress(id, Number(channel))
-
-    this.dmx.setValue(universe, address, Number(value))
-
-    return { status: 'success' }
-  }
-
-  @Get('/:id/channels/')
-  @ApiOperation({ summary: 'Get all channels value of device' })
-  @ApiParam({
-    name: 'id',
-    description: 'Device id',
-  })
-  @ApiResponse({
-    status: 200,
-    type: Array,
-    description: 'Device channels value list',
-  })
-  readAll(@Param('id') id: string): number[] {
-    const universe = this.device.getUniverse(id)
-    const begin = this.device.getAddress(id)
-    const end = this.device.getAddressEnd(id)
-
-    return this.dmx.getValues(universe, begin, end)
-  }
-
-  @Patch('/:id/channels/:value')
-  @ApiOperation({ summary: 'Set all channels value of device' })
-  @ApiParam({
-    name: 'id',
-    description: 'Device id',
-  })
-  updateAll(@Param('id') id: string, @Param('value') value: number) {
-    const universe = this.device.getUniverse(id)
-    const begin = this.device.getAddress(id)
-    const end = this.device.getAddressEnd(id)
-
-    this.dmx.fill(universe, Number(value), begin, end)
-
-    return { status: 'success' }
-  }
 }

@@ -10,5 +10,11 @@ export const {
 export const PRODUCTION = 'production'
 export const DEVELOPMENT = 'development'
 
+export const ENV_FILES = [
+  '.env.local',
+  '.env.development',
+  '.env.production'
+]
+
 export const isProduction = () => NODE_ENV === PRODUCTION
 export const isDevelopment = () => NODE_ENV === DEVELOPMENT

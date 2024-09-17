@@ -1,41 +1,63 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "allowArbitraryExtensions": false,
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "src",
     "emitDecoratorMetadata": true,
+    "esModuleInterop": false,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
     "isolatedModules": true,
-    "lib": ["ESNext", "Decorators", "ES6"],
+    "lib": [
+      "ESNext",
+      "Decorators",
+      "ES6"
+    ],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": true,
     "paths": {
-      "#*": ["./*.ts", "./*.js", "./*/index.ts"],
+      "#*": [
+        "./*.ts",
+        "./*.index.ts"
+      ]
     },
+    "pretty": true,
+    "resolveJsonModule": true,
+    "resolvePackageJsonImports": false,
+    "rootDir": ".",
+    "sourceMap": true,
     "strict": true,
     "target": "ESNext",
     "types": [
       "node",
+      "jest"
     ],
+    "verbatimModuleSyntax": true
   },
   "exclude": [
     "node_modules",
+    "dist"
+  ],
+  "include": [
+    "src",
     "test"
   ],
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "include": [
-    "src/**/*.ts"
-  ],
   "ts-node": {
+    "compiler": "typescript",
+    "compilerOptions": {
+      "esModuleInterop": false,
+      "forceConsistentCasingInFileNames": true,
+      "importHelpers": true,
+      "isolatedModules": true
+    },
+    "emit": false,
     "esm": true,
-    "files": true,
-    "transpileOnly": true
+    "files": true
   }
 }

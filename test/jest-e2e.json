@@ -2,7 +2,8 @@
   "moduleFileExtensions": [
     "js",
     "json",
-    "ts"
+    "ts",
+    "tsx"
   ],
   "rootDir": ".",
   "testEnvironment": "node",

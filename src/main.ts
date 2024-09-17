@@ -1,24 +1,26 @@
-import AppModule from '#app.ts'
-import { isProduction } from '#configs/env.ts'
-import { ServerConfig } from '#configs/server.ts'
-import { SwaggerConfig } from '#configs/swagger.ts'
-import logger from '#utils/logger.ts'
+import AppModule from '#app'
+import { isProduction } from '#configs/env'
+import type { ServerConfig } from '#configs/server'
+import type { SwaggerConfig } from '#configs/swagger'
+import logger from '#utils/logger'
 import { type INestApplication, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory, PartialGraphHost } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import * as fs from 'fs'
-import * as process from 'process'
+import * as fs from 'node:fs'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    snapshot: true,
+    snapshot: false,
+    forceCloseConnections: true,
   })
 
   setupCORS(app)
   setupLogger(app)
   setupSwagger(app)
   setupValidationPipe(app)
+
+  app.enableShutdownHooks()
 
   await listenServer(app)
 }
@@ -35,15 +37,17 @@ const setupLogger = (app: INestApplication) => {
 
 const setupSwagger = (app: INestApplication) => {
   const config = app.get(ConfigService)
-  const { title, description, version, path } = config.get('swagger') as SwaggerConfig
+  const { title, description, version, path, definition } = config.get('swagger') as SwaggerConfig
 
-  const builderConfig = new DocumentBuilder()
-  .setTitle(title)
-  .setDescription(description)
-  .setVersion(version)
-  .build()
+  const builder = new DocumentBuilder()
+    .setTitle(title)
+    .setDescription(description)
+    .setVersion(version)
+    .build()
 
-  const document = SwaggerModule.createDocument(app, builderConfig)
+  const document = SwaggerModule.createDocument(app, builder)
+
+  fs.writeFileSync(definition, JSON.stringify(document, null, 2))
 
   SwaggerModule.setup(path, app, document)
 }
@@ -61,14 +65,17 @@ const listenServer = async (app: INestApplication) => {
 
   const url = await app.getUrl()
 
-  logger.log(`Backend API: ${url}`)
-  logger.log(`Swagger API: ${new URL(path, url).toString()}`)
+  logger.log(`Backend host: ${url}`)
+  logger.log(`Swagger host: ${new URL(path, url).toString()}`)
 }
 
-bootstrap().catch((error: unknown) => {
-  console.error(error)
+const errorHandler = (error: unknown) => {
+  logger.error(error)
 
   fs.writeFileSync('graph.json', PartialGraphHost.toString() ?? '')
 
   process.exit(1)
-})
+}
+
+bootstrap()
+  .catch(errorHandler)
