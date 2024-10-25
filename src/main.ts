@@ -70,7 +70,7 @@ const listenServer = async (app: INestApplication) => {
 }
 
 const errorHandler = (error: unknown) => {
-  logger.error(error)
+  logger.error('An error occurred:', error instanceof Error ? error.stack : String(error))
 
   fs.writeFileSync('graph.json', PartialGraphHost.toString() ?? '')
 
