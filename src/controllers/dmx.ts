@@ -6,7 +6,7 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } 
 @Controller('dmx')
 @ApiTags('DMX')
 export default class DMXController {
-  private readonly dmxService: DMXService
+  protected readonly dmxService: DMXService
 
   /**
    * Constructor
@@ -27,7 +27,7 @@ export default class DMXController {
     type: Object,
     description: 'Universes id list',
   })
-  getUniverses(): string[] {
+  getUniverses() {
     return this.dmxService.getUniverses()
   }
 
@@ -38,8 +38,6 @@ export default class DMXController {
   @ApiOperation({ summary: 'Delete all universes' })
   deleteAllUniverses() {
     this.dmxService.deleteAllUniverses()
-
-    return { status: 'success' }
   }
 
   /**
@@ -52,10 +50,10 @@ export default class DMXController {
     description: 'Universe options',
     type: Object,
   })
-  addUniverse(@Body() options: SerialOptions) {
+  addUniverse(
+    @Body() options: SerialOptions
+  ) {
     this.dmxService.addUniverse(options)
-
-    return { status: 'success' }
   }
 
   /**
@@ -68,10 +66,10 @@ export default class DMXController {
     name: 'id',
     description: 'Universe id',
   })
-  deleteUniverse(@Param('id') id: string) {
+  deleteUniverse(
+    @Param('id') id: string
+  ) {
     this.dmxService.deleteUniverse(id)
-
-    return { status: 'success' }
   }
 
   /**
@@ -89,7 +87,9 @@ export default class DMXController {
     description: 'Array of DMX values',
     type: Array,
   })
-  getValues(@Param('id') universe: string) {
+  getValues(
+    @Param('id') universe: string
+  ) {
     return this.dmxService.getValues(universe)
   }
 
@@ -109,10 +109,11 @@ export default class DMXController {
     description: 'New DMX channels value',
     type: Number,
   })
-  setValues(@Param('id') universe: string, @Param('value') value: number) {
+  setValues(
+    @Param('id') universe: string,
+    @Param('value') value: number
+  ) {
     this.dmxService.updateAll(universe, Number(value))
-
-    return { status: 'success' }
   }
 
   /**
@@ -130,10 +131,11 @@ export default class DMXController {
     description: 'New DMX values',
     type: Object,
   })
-  setChannel(@Param('id') universe: string, @Body() values: DMXMapValues) {
+  setChannel(
+    @Param('id') universe: string,
+    @Body() values: DMXMapValues
+  ) {
     this.dmxService.update(universe, values)
-
-    return { status: 'success' }
   }
 
   /**
@@ -159,7 +161,7 @@ export default class DMXController {
   })
   getChannelValue(
     @Param('id') universe: string,
-    @Param('address') address: number,
+    @Param('address') address: number
   ) {
     return this.dmxService.getValue(universe, Number(address))
   }
@@ -193,7 +195,5 @@ export default class DMXController {
     @Param('value') value: number,
   ) {
     this.dmxService.setValue(universe, Number(address), Number(value))
-
-    return { status: 'success' }
   }
 }

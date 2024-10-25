@@ -61,11 +61,9 @@ export default class DeviceController {
     type: Number,
   })
   async add(
-    @Body() device: Device,
+    @Body() device: Device
   ) {
     await this.deviceService.addDevice(device)
-
-    return { status: 'success' }
   }
 
   /**
@@ -83,11 +81,9 @@ export default class DeviceController {
     status: 201,
   })
   async set(
-    @Body() list: DeviceList,
+    @Body() list: DeviceList
   ) {
     await this.deviceService.setDevices(list)
-
-    return { status: 'success' }
   }
 
   /**
@@ -107,7 +103,9 @@ export default class DeviceController {
     description: 'Device object',
     type: Object,
   })
-  get(@Param('index') index: number) {
+  get(
+    @Param('index') index: number
+  ) {
     return this.deviceService.getDevice(index)
   }
 
@@ -127,18 +125,11 @@ export default class DeviceController {
     description: 'Device object',
     type: Object,
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Device object',
-    type: Object,
-  })
   async update(
     @Param('index') index: number,
     @Body() device: Device,
   ) {
     await this.deviceService.updateDevice(index, device)
-
-    return { status: 'success' }
   }
 
   /**
@@ -152,10 +143,10 @@ export default class DeviceController {
     name: 'index',
     description: 'Device index',
   })
-  async remove(@Param('index') index: number) {
+  async remove(
+    @Param('index') index: number
+  ) {
     await this.deviceService.deleteDevice(index)
-
-    return { status: 'success' }
   }
 
   /**
@@ -170,11 +161,10 @@ export default class DeviceController {
   @ApiParam({
     description: 'Device index',
     name: 'index',
-    description: 'Device index',
   })
   @ApiOperation({ summary: 'Get DMX channel' })
   getDMXChannel(@Param('index') index: number) {
-    return this.deviceService.getDeviceDMX(index)
+    return this.deviceService.getNextDMX(index)
   }
 
 }

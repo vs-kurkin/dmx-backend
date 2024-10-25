@@ -22,6 +22,7 @@ export const DEVELOPMENT = 'development'
  */
 export const ENV_FILES: string[] = [
   '.env.development',
+  '.env.testing',
   '.env.production'
 ]
 
