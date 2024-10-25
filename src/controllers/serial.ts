@@ -1,12 +1,12 @@
 import SerialService from '#services/serial'
-import type { SerialOptions } from '@dmx-cloud/dmx-types'
+import type { SerialList, SerialOptions } from '@dmx-cloud/dmx-types'
 import { Controller, Delete, Get, Post } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @Controller('serial')
 @ApiTags('Serial')
 export default class SerialController {
-  private readonly serialService: SerialService
+  protected readonly serialService: SerialService
 
   /**
    * Constructs a new instance of the serial controller.
@@ -180,7 +180,7 @@ export default class SerialController {
   })
   @ApiResponse({
     status: 200,
-    type: Object,
+    type: Array,
     description: 'Driver list',
   })
   getDrivers() {

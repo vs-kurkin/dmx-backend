@@ -1,11 +1,12 @@
 import DMXService from '#services/dmx'
 import { Controller, type MessageEvent, Sse } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
-import { ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { from, map, Observable } from 'rxjs'
 
 @Controller()
 @ApiTags('SSE')
+@ApiBearerAuth()
 export default class ServerEventsController {
   protected readonly dmxService: DMXService
   protected events: Map<string, string>

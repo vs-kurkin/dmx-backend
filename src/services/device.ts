@@ -42,7 +42,7 @@ export default class DeviceService {
    * @returns The device at the given index
    */
   async getDevice(index: DeviceIndex) {
-    const doc: Document<Device> = await this.getDeviceByIndex(index)
+    const doc = await this.getDeviceByIndex(index)
 
     return doc.toJSON()
   }

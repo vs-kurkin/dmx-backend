@@ -11,33 +11,24 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "lib": [
-      "ESNext",
-      "Decorators",
-      "ES6"
-    ],
+    "lib": [ "ESNext", "Decorators", "ES6" ],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": true,
     "paths": {
-      "#*": [
-        "./*.ts",
-        "./*.index.ts"
-      ]
+      "#*": [ "./*.ts", "./*.index.ts" ]
     },
     "pretty": true,
     "resolveJsonModule": true,
     "resolvePackageJsonImports": false,
     "rootDir": ".",
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "ESNext",
-    "types": [
-      "node",
-      "jest"
-    ],
+    "types": [ "node", "jest" ],
     "verbatimModuleSyntax": true
   },
   "exclude": [
