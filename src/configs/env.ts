@@ -7,14 +7,34 @@ export const {
   npm_package_version,
 } = process.env
 
+/**
+ * Production environment.
+ */
 export const PRODUCTION = 'production'
+
+/**
+ * Development environment.
+ */
 export const DEVELOPMENT = 'development'
 
-export const ENV_FILES = [
-  '.env.local',
+/**
+ * List of environment files to load.
+ */
+export const ENV_FILES: string[] = [
   '.env.development',
   '.env.production'
 ]
 
-export const isProduction = () => NODE_ENV === PRODUCTION
-export const isDevelopment = () => NODE_ENV === DEVELOPMENT
+/**
+ * Check if the current environment is production.
+ *
+ * @returns {boolean} True if current environment is production, false otherwise.
+ */
+export const isProduction = (): boolean => NODE_ENV === PRODUCTION
+
+/**
+ * Check if the current environment is development.
+ *
+ * @returns {boolean} True if current environment is development, false otherwise.
+ */
+export const isDevelopment = (): boolean => NODE_ENV === DEVELOPMENT

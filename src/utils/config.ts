@@ -44,7 +44,11 @@ export class Config {
     this.config = config
   }
 
-  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Indicates whether the application is running in production mode.
+   *
+   * @returns true if in production, false otherwise
+   */
   get isProduction(): boolean {
     return this.config.get('NODE_ENV') === 'production'
   }

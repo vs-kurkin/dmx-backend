@@ -6,7 +6,12 @@ import process from 'process'
 const PING = 1000 * 60 * 30
 const PORT = Number(process.env.NEST_SOCKET_PORT ?? 8081)
 
-export const getSocketPort = () => PORT
+/**
+ * Returns the port number for the WebSocket server.
+ *
+ * @returns {number} the port number.
+ */
+export const getSocketPort = (): number => PORT
 
 export default registerAs(
   'webSocket',

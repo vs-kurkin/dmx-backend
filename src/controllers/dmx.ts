@@ -8,10 +8,18 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } 
 export default class DMXController {
   private readonly dmxService: DMXService
 
+  /**
+   * Constructor
+   * @param dmx DMX service
+   */
   constructor(dmx: DMXService) {
     this.dmxService = dmx
   }
 
+  /**
+   * Returns a list of all DMX universe IDs
+   * @returns A list of universe IDs
+   */
   @Get('/')
   @ApiOperation({ summary: 'Returns universes list' })
   @ApiResponse({
@@ -23,6 +31,9 @@ export default class DMXController {
     return this.dmxService.getUniverses()
   }
 
+  /**
+   * Delete all DMX universes
+   */
   @Delete('/')
   @ApiOperation({ summary: 'Delete all universes' })
   deleteAllUniverses() {
@@ -31,6 +42,10 @@ export default class DMXController {
     return { status: 'success' }
   }
 
+  /**
+   * Add a new DMX universe
+   * @param options Options for the new universe
+   */
   @Post('/')
   @ApiOperation({ summary: 'Add universe' })
   @ApiBody({
@@ -43,6 +58,10 @@ export default class DMXController {
     return { status: 'success' }
   }
 
+  /**
+   * Delete a DMX universe
+   * @param id The ID of the universe to delete
+   */
   @Delete('/:id/')
   @ApiOperation({ summary: 'Delete universe' })
   @ApiParam({
@@ -55,6 +74,11 @@ export default class DMXController {
     return { status: 'success' }
   }
 
+  /**
+   * Get the DMX values of a universe
+   * @param universe The ID of the universe to get the values of
+   * @returns The DMX values of the universe
+   */
   @Get('/:id/values/')
   @ApiOperation({ summary: 'Get DMX values' })
   @ApiParam({
@@ -69,6 +93,11 @@ export default class DMXController {
     return this.dmxService.getValues(universe)
   }
 
+  /**
+   * Set all DMX values of a universe to the same value
+   * @param universe The ID of the universe to set the values of
+   * @param value The value to set the DMX channels to
+   */
   @Patch('/:id/values/:value')
   @ApiOperation({ summary: 'Set DMX values' })
   @ApiParam({
@@ -86,6 +115,11 @@ export default class DMXController {
     return { status: 'success' }
   }
 
+  /**
+   * Set multiple DMX channel values
+   * @param universe The ID of the universe to set the values of
+   * @param values An object with channel numbers as keys and the values to set those channels to
+   */
   @Patch('/:id/channel/')
   @ApiOperation({ summary: 'Sets several DMX channels' })
   @ApiParam({
@@ -102,6 +136,12 @@ export default class DMXController {
     return { status: 'success' }
   }
 
+  /**
+   * Get a DMX channel value
+   * @param universe The ID of the universe to get the value from
+   * @param address The channel address
+   * @returns The value of the channel
+   */
   @Get('/:id/channel/:address')
   @ApiOperation({ summary: 'Get DMX channel value' })
   @ApiParam({
@@ -124,6 +164,13 @@ export default class DMXController {
     return this.dmxService.getValue(universe, Number(address))
   }
 
+  /**
+   * Set a DMX channel value
+   * @param universe The ID of the universe to set the value of
+   * @param address The channel address
+   * @param value The value to set the channel to
+   * @returns An object with a status key
+   */
   @Patch('/:id/channel/:address/value/:value')
   @ApiOperation({ summary: 'Set DMX channel value' })
   @ApiParam({
