@@ -5,10 +5,12 @@
     "ts"
   ],
   "moduleNameMapper": {
-    "@*/(.*)": "<rootDir>/src/$1"
+    "@/*": "<rootDir>/src/*"
   },
   "rootDir": ".",
-  "testRegex": ".*\\.spec\\.ts$",
+  "testMatch": [
+    "**/*.spec.ts"
+  ],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

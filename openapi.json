@@ -4,6 +4,7 @@
     "/sse": {
       "get": {
         "operationId": "ServerEventsController_sse",
+        "summary": "Establish SSE connection for server events",
         "parameters": [],
         "responses": {
           "200": {
@@ -12,6 +13,11 @@
         },
         "tags": [
           "SSE"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
         ]
       }
     },
@@ -19,6 +25,7 @@
       "get": {
         "operationId": "SerialController_getList",
         "summary": "Returns serial ports info",
+        "description": "Retrieve a list of serial port info objects",
         "parameters": [],
         "responses": {
           "200": {
@@ -30,6 +37,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "tags": [
@@ -38,10 +48,15 @@
       },
       "delete": {
         "operationId": "SerialController_dropSerial",
+        "summary": "Deletes all serial ports and universes",
+        "description": "Delete all serial ports and associated universes",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "tags": [
@@ -50,10 +65,26 @@
       },
       "post": {
         "operationId": "SerialController_addSerial",
+        "summary": "Adds a new serial port and associated universe",
+        "description": "Create a new serial port and associated universe",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Serial options",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "tags": [
@@ -64,10 +95,25 @@
     "/serial/{id}": {
       "delete": {
         "operationId": "SerialController_deleteSerial",
-        "parameters": [],
+        "summary": "Deletes a serial port and its associated universe",
+        "description": "Delete a serial port and associated universe by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The ID of the serial port",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "tags": [
@@ -78,10 +124,22 @@
     "/serial/current": {
       "get": {
         "operationId": "SerialController_getCurrent",
+        "summary": "Returns the ID of the current serial port",
+        "description": "Retrieve the ID of the current serial port",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Current serial port ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "tags": [
@@ -90,10 +148,26 @@
       },
       "post": {
         "operationId": "SerialController_setCurrent",
+        "summary": "Set Current Serial Port",
+        "description": "Set the current serial port by ID",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "The ID of the serial port to set as current",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "responses": {
-          "201": {
-            "description": ""
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "tags": [
@@ -105,6 +179,7 @@
       "get": {
         "operationId": "SerialController_getDrivers",
         "summary": "Returns supported driver list",
+        "description": "Retrieve a list of supported serial drivers",
         "parameters": [],
         "responses": {
           "200": {
@@ -112,7 +187,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "array"
                 }
               }
             }
@@ -541,14 +616,7 @@
         },
         "responses": {
           "200": {
-            "description": "Device object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [

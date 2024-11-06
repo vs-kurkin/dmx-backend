@@ -5,9 +5,7 @@
     "typeCheck": true,
     "builder": "tsc",
     "deleteOutDir": true,
-    "plugins": [
-      "@nestjs/swagger"
-    ]
+    "plugins": ["@nestjs/swagger"]
   },
   "entryFile": "../src/main.ts",
   "generateOptions": {

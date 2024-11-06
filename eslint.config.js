@@ -1,39 +1,34 @@
-import js from '@eslint/js'
-import tsLintPlugin from '@typescript-eslint/eslint-plugin'
-import tsLintParser from '@typescript-eslint/parser'
-import globals from 'globals'
+import eslintJs from '@eslint/js';
+import eslintTsPlugin from '@typescript-eslint/eslint-plugin';
+import eslintTsParser from '@typescript-eslint/parser';
+import globalVariables from 'globals';
 
 export default [
   {
-    ...js.configs.recommended,
-    ...tsLintPlugin.configs.strictTypeChecked,
-    ...tsLintPlugin.configs.stylisticTypeChecked,
+    ...eslintJs.configs.recommended,
+    ...eslintTsPlugin.configs.strictTypeChecked,
+    ...eslintTsPlugin.configs.stylisticTypeChecked,
   },
 
   {
-    files: [ 'src/**/*.ts' ],
+    files: ['src/**/*.ts'],
     languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-      parser: tsLintParser,
+      globals: { ...globalVariables.node },
+      parser: eslintTsParser,
       parserOptions: {
         ecmaVersion: 'latest',
-        project: true,
+        project: './tsconfig.json',
         sourceType: 'module',
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    plugins: tsLintPlugin,
+    plugins: eslintTsPlugin,
   },
 
   {
-    files: [ 'test/**/*' ],
+    files: ['test/**/*'],
     languageOptions: {
-      globals: {
-        ...globals.jest,
-        ...globals.node,
-      },
+      globals: { ...globalVariables.jest, ...globalVariables.node },
     },
   },
-]
+];
