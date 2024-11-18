@@ -1,7 +1,8 @@
 import SerialService from '#services/serial'
-import type { SerialList, SerialOptions } from '@dmx-cloud/dmx-types'
-import { Controller, Delete, Get, Post } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import type {SerialDrivers, SerialList, SerialOptions} from '@dmx-cloud/dmx-types'
+import {BadRequestException, Controller, Delete, Get, Post} from '@nestjs/common'
+import {ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger'
+import {RESPONSE_OK} from "#utils/constants"
 
 @Controller('serial')
 @ApiTags('Serial')
@@ -60,6 +61,8 @@ export default class SerialController {
   })
   async dropSerial() {
     await this.serialService.dropSerial()
+
+    return RESPONSE_OK
   }
 
   /**
@@ -75,6 +78,32 @@ export default class SerialController {
   })
   @ApiBody({
     type: 'SerialOptions',
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        driver: {
+          type: 'string',
+          description: 'The serial driver',
+          example: 'serial',
+        },
+        port: {
+          type: 'string',
+          description: 'The serial port',
+          example: '/dev/ttyUSB0',
+        },
+        baudrate: {
+          type: 'number',
+          description: 'The baud rate',
+          example: 115200,
+        },
+        universe: {
+          type: 'number',
+          description: 'The universe',
+          example: 1,
+        },
+      },
+    },
     description: 'Serial options',
   })
   @ApiResponse({
@@ -87,6 +116,8 @@ export default class SerialController {
   })
   async addSerial(options: SerialOptions) {
     await this.serialService.addSerial(options)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -115,6 +146,8 @@ export default class SerialController {
   })
   async deleteSerial(id: string) {
     await this.serialService.deleteSerial(id)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -165,7 +198,13 @@ export default class SerialController {
     description: 'Not Found',
   })
   setCurrent(id: string) {
+    if (!id) {
+      throw new BadRequestException('Serial port ID is required')
+    }
+
     this.serialService.setCurrent(id)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -183,7 +222,7 @@ export default class SerialController {
     type: Array,
     description: 'Driver list',
   })
-  getDrivers() {
+  async getDrivers(): Promise<SerialDrivers[keyof SerialDrivers][]> {
     return this.serialService.getDrivers().filter((driver) => driver !== 'null')
   }
 

@@ -1,16 +1,18 @@
-import { registerAs } from '@nestjs/config'
+import {registerAs} from '@nestjs/config'
 import process from 'process'
 
 export interface ServerConfig {
-  schema: string;
-  host: string;
-  port: number;
-  path: string;
+  readonly host: string;
+  readonly path: string;
+  readonly port: number;
+  readonly schema: string;
 }
 
+export type ServerOptions = Readonly<Partial<ServerConfig>>;
+
 export default registerAs('server', (): ServerConfig => ({
-  schema: 'http',
   host: process.env.NEST_API_HOST ?? '',
-  port: Number(process.env.NEST_API_PORT),
   path: '/api',
+  port: Number(process.env.NEST_API_PORT),
+  schema: 'http',
 }))

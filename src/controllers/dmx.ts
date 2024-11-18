@@ -1,7 +1,8 @@
-import DMXService, { type DMXMapValues } from '#services/dmx'
-import type { SerialOptions } from '@dmx-cloud/dmx-types'
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import DMXService, {type DMXMapValues} from '#services/dmx'
+import type {SerialOptions} from '@dmx-cloud/dmx-types'
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common'
+import {ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger'
+import {RESPONSE_OK} from "#utils/constants"
 
 @Controller('dmx')
 @ApiTags('DMX')
@@ -38,6 +39,8 @@ export default class DMXController {
   @ApiOperation({ summary: 'Delete all universes' })
   deleteAllUniverses() {
     this.dmxService.deleteAllUniverses()
+
+    return RESPONSE_OK
   }
 
   /**
@@ -54,6 +57,8 @@ export default class DMXController {
     @Body() options: SerialOptions
   ) {
     this.dmxService.addUniverse(options)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -70,6 +75,8 @@ export default class DMXController {
     @Param('id') id: string
   ) {
     this.dmxService.deleteUniverse(id)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -114,6 +121,8 @@ export default class DMXController {
     @Param('value') value: number
   ) {
     this.dmxService.updateAll(universe, Number(value))
+
+    return RESPONSE_OK
   }
 
   /**
@@ -136,6 +145,8 @@ export default class DMXController {
     @Body() values: DMXMapValues
   ) {
     this.dmxService.update(universe, values)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -195,5 +206,7 @@ export default class DMXController {
     @Param('value') value: number,
   ) {
     this.dmxService.setValue(universe, Number(address), Number(value))
+
+    return RESPONSE_OK
   }
 }

@@ -10,12 +10,12 @@ export const {
 /**
  * Production environment.
  */
-export const PRODUCTION = 'production'
+export const PRODUCTION = 'production' as const
 
 /**
  * Development environment.
  */
-export const DEVELOPMENT = 'development'
+export const DEVELOPMENT = 'development' as const
 
 /**
  * List of environment files to load.

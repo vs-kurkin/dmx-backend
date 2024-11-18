@@ -1,7 +1,8 @@
 import DeviceService from '#services/device'
-import type { Device, DeviceList } from '@dmx-cloud/dmx-types'
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import type {Device, DeviceList} from '@dmx-cloud/dmx-types'
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common'
+import {ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger'
+import {RESPONSE_OK} from "#utils/constants"
 
 @Controller('device')
 @ApiTags('Device')
@@ -41,7 +42,7 @@ export default class DeviceController {
   async removeAll() {
     await this.deviceService.deleteAllDevices()
 
-    return { status: 'success' }
+    return RESPONSE_OK
   }
 
   /**
@@ -64,6 +65,8 @@ export default class DeviceController {
     @Body() device: Device
   ) {
     await this.deviceService.addDevice(device)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -84,6 +87,8 @@ export default class DeviceController {
     @Body() list: DeviceList
   ) {
     await this.deviceService.setDevices(list)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -130,6 +135,8 @@ export default class DeviceController {
     @Body() device: Device,
   ) {
     await this.deviceService.updateDevice(index, device)
+
+    return RESPONSE_OK
   }
 
   /**
@@ -147,6 +154,8 @@ export default class DeviceController {
     @Param('index') index: number
   ) {
     await this.deviceService.deleteDevice(index)
+
+    return RESPONSE_OK
   }
 
   /**

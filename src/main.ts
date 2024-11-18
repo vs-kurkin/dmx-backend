@@ -1,13 +1,13 @@
 import AppModule from '#app'
-import { isProduction } from '#configs/env'
-import type { ServerConfig } from '#configs/server'
-import type { SwaggerConfig } from '#configs/swagger'
+import type {ServerOptions} from '#configs/server'
+import type {SwaggerOptions} from '#configs/swagger'
 import logger from '#utils/logger'
-import { type INestApplication, ValidationPipe } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { NestFactory, PartialGraphHost } from '@nestjs/core'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import {type INestApplication, ValidationPipe} from '@nestjs/common'
+import {NestFactory, PartialGraphHost} from '@nestjs/core'
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger'
 import * as fs from 'node:fs'
+import {DEFAULT_PORT} from "#utils/constants"
+import {getConfig} from "#utils/config"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,8 +26,10 @@ async function bootstrap() {
 }
 
 const setupCORS = (app: INestApplication) => {
+  const {isProduction} = getConfig(app)
+
   app.enableCors({
-    origin: isProduction() ? false : '*',
+    origin: isProduction ? false : '*',
   })
 }
 
@@ -36,8 +38,7 @@ const setupLogger = (app: INestApplication) => {
 }
 
 const setupSwagger = (app: INestApplication) => {
-  const config = app.get(ConfigService)
-  const { title, description, version, path, definition } = config.get('swagger') as SwaggerConfig
+  const {title, description, version, path, definition} = getConfig<SwaggerOptions>(app, 'swagger')
 
   const builder = new DocumentBuilder()
     .setTitle(title)
@@ -57,9 +58,8 @@ const setupValidationPipe = (app: INestApplication) => {
 }
 
 const listenServer = async (app: INestApplication) => {
-  const config = app.get(ConfigService)
-  const { port } = config.get('server') as ServerConfig
-  const { path } = config.get('swagger') as SwaggerConfig
+  const {port = DEFAULT_PORT} = getConfig<ServerOptions>(app, 'server')
+  const {path} = getConfig<SwaggerOptions>(app, 'swagger')
 
   await app.listen(port)
 

@@ -4,28 +4,27 @@
     "/sse": {
       "get": {
         "operationId": "ServerEventsController_sse",
-        "summary": "Establish SSE connection for server events",
         "parameters": [],
         "responses": {
           "200": {
             "description": "SSE stream"
           }
         },
-        "tags": [
-          "SSE"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Establish SSE connection for server events",
+        "tags": [
+          "SSE"
         ]
       }
     },
     "/serial": {
       "get": {
-        "operationId": "SerialController_getList",
-        "summary": "Returns serial ports info",
         "description": "Retrieve a list of serial port info objects",
+        "operationId": "SerialController_getList",
         "parameters": [],
         "responses": {
           "200": {
@@ -42,14 +41,14 @@
             "description": "Internal Server Error"
           }
         },
+        "summary": "Returns serial ports info",
         "tags": [
           "Serial"
         ]
       },
       "delete": {
-        "operationId": "SerialController_dropSerial",
-        "summary": "Deletes all serial ports and universes",
         "description": "Delete all serial ports and associated universes",
+        "operationId": "SerialController_dropSerial",
         "parameters": [],
         "responses": {
           "204": {
@@ -59,14 +58,14 @@
             "description": "Internal Server Error"
           }
         },
+        "summary": "Deletes all serial ports and universes",
         "tags": [
           "Serial"
         ]
       },
       "post": {
-        "operationId": "SerialController_addSerial",
-        "summary": "Adds a new serial port and associated universe",
         "description": "Create a new serial port and associated universe",
+        "operationId": "SerialController_addSerial",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -74,6 +73,29 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
+                "properties": {
+                  "driver": {
+                    "type": "string",
+                    "description": "The serial driver",
+                    "example": "serial"
+                  },
+                  "port": {
+                    "type": "string",
+                    "description": "The serial port",
+                    "example": "/dev/ttyUSB0"
+                  },
+                  "baudrate": {
+                    "type": "number",
+                    "description": "The baud rate",
+                    "example": 115200
+                  },
+                  "universe": {
+                    "type": "number",
+                    "description": "The universe",
+                    "example": 1
+                  }
+                },
                 "$ref": "#/components/schemas/"
               }
             }
@@ -87,6 +109,7 @@
             "description": "Bad Request"
           }
         },
+        "summary": "Adds a new serial port and associated universe",
         "tags": [
           "Serial"
         ]
@@ -94,9 +117,8 @@
     },
     "/serial/{id}": {
       "delete": {
-        "operationId": "SerialController_deleteSerial",
-        "summary": "Deletes a serial port and its associated universe",
         "description": "Delete a serial port and associated universe by ID",
+        "operationId": "SerialController_deleteSerial",
         "parameters": [
           {
             "name": "id",
@@ -116,6 +138,7 @@
             "description": "Not Found"
           }
         },
+        "summary": "Deletes a serial port and its associated universe",
         "tags": [
           "Serial"
         ]
@@ -123,9 +146,8 @@
     },
     "/serial/current": {
       "get": {
-        "operationId": "SerialController_getCurrent",
-        "summary": "Returns the ID of the current serial port",
         "description": "Retrieve the ID of the current serial port",
+        "operationId": "SerialController_getCurrent",
         "parameters": [],
         "responses": {
           "200": {
@@ -142,14 +164,14 @@
             "description": "Not Found"
           }
         },
+        "summary": "Returns the ID of the current serial port",
         "tags": [
           "Serial"
         ]
       },
       "post": {
-        "operationId": "SerialController_setCurrent",
-        "summary": "Set Current Serial Port",
         "description": "Set the current serial port by ID",
+        "operationId": "SerialController_setCurrent",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -170,6 +192,7 @@
             "description": "Not Found"
           }
         },
+        "summary": "Set Current Serial Port",
         "tags": [
           "Serial"
         ]
@@ -177,9 +200,8 @@
     },
     "/serial/drivers": {
       "get": {
-        "operationId": "SerialController_getDrivers",
-        "summary": "Returns supported driver list",
         "description": "Retrieve a list of supported serial drivers",
+        "operationId": "SerialController_getDrivers",
         "parameters": [],
         "responses": {
           "200": {
@@ -193,6 +215,7 @@
             }
           }
         },
+        "summary": "Returns supported driver list",
         "tags": [
           "Serial"
         ]
@@ -201,7 +224,6 @@
     "/dmx": {
       "get": {
         "operationId": "DMXController_getUniverses",
-        "summary": "Returns universes list",
         "parameters": [],
         "responses": {
           "200": {
@@ -215,26 +237,26 @@
             }
           }
         },
+        "summary": "Returns universes list",
         "tags": [
           "DMX"
         ]
       },
       "delete": {
         "operationId": "DMXController_deleteAllUniverses",
-        "summary": "Delete all universes",
         "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "summary": "Delete all universes",
         "tags": [
           "DMX"
         ]
       },
       "post": {
         "operationId": "DMXController_addUniverse",
-        "summary": "Add universe",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -252,6 +274,7 @@
             "description": ""
           }
         },
+        "summary": "Add universe",
         "tags": [
           "DMX"
         ]
@@ -260,7 +283,6 @@
     "/dmx/{id}": {
       "delete": {
         "operationId": "DMXController_deleteUniverse",
-        "summary": "Delete universe",
         "parameters": [
           {
             "name": "id",
@@ -277,6 +299,7 @@
             "description": ""
           }
         },
+        "summary": "Delete universe",
         "tags": [
           "DMX"
         ]
@@ -285,7 +308,6 @@
     "/dmx/{id}/values": {
       "get": {
         "operationId": "DMXController_getValues",
-        "summary": "Get DMX values",
         "parameters": [
           {
             "name": "id",
@@ -309,6 +331,7 @@
             }
           }
         },
+        "summary": "Get DMX values",
         "tags": [
           "DMX"
         ]
@@ -317,7 +340,6 @@
     "/dmx/{id}/values/{value}": {
       "patch": {
         "operationId": "DMXController_setValues",
-        "summary": "Set DMX values",
         "parameters": [
           {
             "name": "id",
@@ -343,6 +365,7 @@
             "description": ""
           }
         },
+        "summary": "Set DMX values",
         "tags": [
           "DMX"
         ]
@@ -351,7 +374,6 @@
     "/dmx/{id}/channel": {
       "patch": {
         "operationId": "DMXController_setChannel",
-        "summary": "Sets several DMX channels",
         "parameters": [
           {
             "name": "id",
@@ -379,6 +401,7 @@
             "description": ""
           }
         },
+        "summary": "Sets several DMX channels",
         "tags": [
           "DMX"
         ]
@@ -387,7 +410,6 @@
     "/dmx/{id}/channel/{address}": {
       "get": {
         "operationId": "DMXController_getChannelValue",
-        "summary": "Get DMX channel value",
         "parameters": [
           {
             "name": "id",
@@ -420,6 +442,7 @@
             }
           }
         },
+        "summary": "Get DMX channel value",
         "tags": [
           "DMX"
         ]
@@ -428,7 +451,6 @@
     "/dmx/{id}/channel/{address}/value/{value}": {
       "patch": {
         "operationId": "DMXController_setChannelValue",
-        "summary": "Set DMX channel value",
         "parameters": [
           {
             "name": "id",
@@ -463,6 +485,7 @@
             "description": ""
           }
         },
+        "summary": "Set DMX channel value",
         "tags": [
           "DMX"
         ]
@@ -471,7 +494,6 @@
     "/device": {
       "get": {
         "operationId": "DeviceController_getDevices",
-        "summary": "Returns device list",
         "parameters": [],
         "responses": {
           "200": {
@@ -485,26 +507,26 @@
             }
           }
         },
+        "summary": "Returns device list",
         "tags": [
           "Device"
         ]
       },
       "delete": {
         "operationId": "DeviceController_removeAll",
-        "summary": "Delete all devices",
         "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "summary": "Delete all devices",
         "tags": [
           "Device"
         ]
       },
       "post": {
         "operationId": "DeviceController_add",
-        "summary": "Add new device",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -529,13 +551,13 @@
             }
           }
         },
+        "summary": "Add new device",
         "tags": [
           "Device"
         ]
       },
       "patch": {
         "operationId": "DeviceController_set",
-        "summary": "Set bulk devices",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -553,6 +575,7 @@
             "description": ""
           }
         },
+        "summary": "Set bulk devices",
         "tags": [
           "Device"
         ]
@@ -561,7 +584,6 @@
     "/device/{index}": {
       "get": {
         "operationId": "DeviceController_get",
-        "summary": "Get device",
         "parameters": [
           {
             "name": "index",
@@ -585,13 +607,13 @@
             }
           }
         },
+        "summary": "Get device",
         "tags": [
           "Device"
         ]
       },
       "patch": {
         "operationId": "DeviceController_update",
-        "summary": "Update device",
         "parameters": [
           {
             "name": "index",
@@ -619,13 +641,13 @@
             "description": ""
           }
         },
+        "summary": "Update device",
         "tags": [
           "Device"
         ]
       },
       "delete": {
         "operationId": "DeviceController_remove",
-        "summary": "Delete device",
         "parameters": [
           {
             "name": "index",
@@ -642,6 +664,7 @@
             "description": ""
           }
         },
+        "summary": "Delete device",
         "tags": [
           "Device"
         ]
@@ -650,7 +673,6 @@
     "/device/dmx/{index}": {
       "get": {
         "operationId": "DeviceController_getDMXChannel",
-        "summary": "Get DMX channel",
         "parameters": [
           {
             "name": "index",
@@ -667,6 +689,7 @@
             "description": ""
           }
         },
+        "summary": "Get DMX channel",
         "tags": [
           "Device"
         ]

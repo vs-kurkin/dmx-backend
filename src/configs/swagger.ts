@@ -1,18 +1,20 @@
-import { npm_package_description, npm_package_name, npm_package_version } from '#configs/env'
-import { registerAs } from '@nestjs/config'
+import {npm_package_description, npm_package_name, npm_package_version} from '#configs/env'
+import {registerAs} from '@nestjs/config'
 
 export interface SwaggerConfig {
-  title: string;
-  description: string;
-  version: string;
-  path: string;
-  definition: string;
+  readonly definition: string;
+  readonly description: string;
+  readonly path: string;
+  readonly title: string;
+  readonly version: string;
 }
 
-export default registerAs('swagger', (): SwaggerConfig => ({
+export type SwaggerOptions = Readonly<SwaggerConfig>
+
+export default registerAs('swagger', (): SwaggerOptions => ({
   definition: 'openapi.json',
+  description: npm_package_description ?? '',
   path: '/swagger',
   title: npm_package_name ?? '',
-  description: npm_package_description ?? '',
   version: npm_package_version ?? '',
 }))
