@@ -22,7 +22,7 @@
     "@nestjs/devtools-integration": "^0.1.6",
     "@nestjs/swagger": "^8.0.7",
     "@nestjs/testing": "^10.4.8",
-    "@swc/cli": "^0.5.0",
+    "@swc/cli": "^0.5.1",
     "@swc/core": "^1.9.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
