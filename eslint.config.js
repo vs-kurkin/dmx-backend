@@ -23,6 +23,12 @@ export default [
       },
     },
     plugins: eslintTsPlugin,
+    rules: {
+      '@typescript-eslint/no-explicit-any': [ 'warn', { fixToUnknown: true } ],
+      '@typescript-eslint/no-unused-vars': 'error',
+      'no-unused-vars': 'off',
+      'quotes': [ 'error', 'single', { 'avoidEscape': true } ],
+    },
   },
 
   {
