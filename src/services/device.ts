@@ -3,6 +3,7 @@ import type { Device, DeviceIndex, DeviceList } from '@dmx-cloud/dmx-types'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { type Document, Model } from 'mongoose'
+import Joi from 'joi'
 
 @Injectable()
 export default class DeviceService {
@@ -104,6 +105,12 @@ export default class DeviceService {
   async updateDevice(index: DeviceIndex, device: Device) {
     const doc = await this.getDeviceByIndex(index)
 
+    // Validate the device object
+    const { error } = this.validateDevice(device)
+    if (error) {
+      throw new Error(`Invalid device data: ${error.message}`)
+    }
+
     await doc.replaceOne(device, { runValidators: true })
     await doc.save()
   }
@@ -133,5 +140,26 @@ export default class DeviceService {
     }
 
     throw new Error(`Device with index "${index}" is not found`)
+  }
+
+  /**
+   * Validate the device object.
+   *
+   * @param device The device object to validate
+   * @returns The result of the validation
+   */
+  private validateDevice(device: Device) {
+    const schema = Joi.object({
+      // Define the schema for the device object
+      name: Joi.string().required(),
+      channels: Joi.array().items(Joi.object({
+        id: Joi.string().required(),
+        name: Joi.string().required(),
+        type: Joi.string().required(),
+      })).required(),
+      // Add other fields as necessary
+    })
+
+    return schema.validate(device)
   }
 }
