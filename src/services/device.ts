@@ -111,7 +111,7 @@ export default class DeviceService {
 
     const doc = await this.getDeviceByIndex(index)
 
-    await doc.replaceOne({ $set: device }, { runValidators: true })
+    await doc.replaceOne({ $set: { $eq: device } }, { runValidators: true })
     await doc.save()
   }
 
