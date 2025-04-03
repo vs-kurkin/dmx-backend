@@ -103,15 +103,15 @@ export default class DeviceService {
    * @param device The updated device
    */
   async updateDevice(index: DeviceIndex, device: Device) {
-    const doc = await this.getDeviceByIndex(index)
-
     // Validate the device object
     const { error } = this.validateDevice(device)
     if (error) {
       throw new Error(`Invalid device data: ${error.message}`)
     }
 
-    await doc.replaceOne(device, { runValidators: true })
+    const doc = await this.getDeviceByIndex(index)
+
+    await doc.replaceOne({ $set: { $eq: device } }, { runValidators: true })
     await doc.save()
   }
 
