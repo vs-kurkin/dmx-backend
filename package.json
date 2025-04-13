@@ -4,7 +4,7 @@
     "@dmx-cloud/dmx": "^0.70.0",
     "@nestjs/cli": "^11.0.5",
     "@nestjs/common": "^11.0.13",
-    "@nestjs/config": "^3.3.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.13",
     "@nestjs/event-emitter": "^2.1.1",
     "@nestjs/mongoose": "^10.1.0",
