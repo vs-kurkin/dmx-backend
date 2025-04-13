@@ -4,7 +4,7 @@
     "@dmx-cloud/dmx": "^0.70.0",
     "@nestjs/cli": "^11.0.5",
     "@nestjs/common": "^11.0.13",
-    "@nestjs/config": "^3.3.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.13",
     "@nestjs/event-emitter": "^2.1.1",
     "@nestjs/mongoose": "^10.1.0",
@@ -12,7 +12,7 @@
     "@nestjs/platform-socket.io": "^11.0.13",
     "@nestjs/websockets": "^10.4.15",
     "class-validator": "^0.14.1",
-    "mongoose": "^8.9.5",
+    "mongoose": "^8.13.2",
     "rxjs": "^7.8.1",
     "serialport": "^13.0.0",
     "joi": "^17.13.3"
