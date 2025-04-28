@@ -3,7 +3,7 @@
   "dependencies": {
     "@dmx-cloud/dmx": "^0.70.0",
     "@nestjs/cli": "^11.0.5",
-    "@nestjs/common": "^11.0.16",
+    "@nestjs/common": "^11.1.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.13",
     "@nestjs/event-emitter": "^3.0.1",
