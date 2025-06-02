@@ -1,7 +1,7 @@
 {
   "author": "mail@b-vladi.ru",
   "dependencies": {
-    "@dmx-cloud/dmx": "^0.80.0",
+    "@dmx-cloud/dmx": "^0.81.0",
     "@nestjs/cli": "^11.0.7",
     "@nestjs/common": "^11.1.2",
     "@nestjs/config": "^4.0.2",
